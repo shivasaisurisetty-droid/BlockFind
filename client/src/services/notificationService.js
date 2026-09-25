@@ -1,18 +1,34 @@
 import api from './api';
+import { mockDataStore } from './mockDataStore';
+import { authService } from './authService';
 
 export const notificationService = {
   async getMyNotifications() {
-    const response = await api.get('/notifications');
-    return response.data;
+    try {
+      const response = await api.get('/notifications');
+      return response.data;
+    } catch {
+      const user = authService.getCurrentUser();
+      return mockDataStore.getNotifications(user?.id);
+    }
   },
 
   async markAsRead(id) {
-    const response = await api.put(`/notifications/${id}/read`);
-    return response.data;
+    try {
+      const response = await api.put(`/notifications/${id}/read`);
+      return response.data;
+    } catch {
+      return mockDataStore.markNotificationRead(id);
+    }
   },
 
   async markAllAsRead() {
-    const response = await api.put('/notifications/read-all');
-    return response.data;
+    try {
+      const response = await api.put('/notifications/read-all');
+      return response.data;
+    } catch {
+      return mockDataStore.markAllNotificationsRead();
+    }
   }
 };
+
