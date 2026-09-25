@@ -1,5 +1,5 @@
 /**
- * Smart Matching Engine (Rule-based heuristic prototype)
+ * Smart Matching Engine (Rule-based heuristic scoring engine)
  * Compares lost item attributes with found items registry.
  * Designed to be modularly replaced with AI/Vector embedding models (e.g. CLIP + Sentence-Transformers on AWS SageMaker).
  */

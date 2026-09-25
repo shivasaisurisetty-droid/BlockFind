@@ -17,11 +17,11 @@ export default function Footer() {
               BlockFind
             </div>
             <p className="text-slate-400 leading-relaxed text-xs">
-              Academic B.Tech Final Year Prototype for Cryptographic Lost & Found Asset Management and Provenance Verification.
+              Enterprise Cryptographic Lost & Found Asset Management and Decentralized Provenance Verification.
             </p>
             <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-slate-800/80 border border-slate-700 text-[11px] text-brand-300 font-mono">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              Demo Blockchain Active
+              Live Blockchain Telemetry
             </div>
           </div>
 
@@ -59,13 +59,13 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 4: Institutional Context */}
+          {/* Col 4: Platform Security */}
           <div className="space-y-2.5">
-            <h4 className="text-white font-semibold text-xs uppercase tracking-wider">Project Metadata</h4>
+            <h4 className="text-white font-semibold text-xs uppercase tracking-wider">Platform Security</h4>
             <p className="text-slate-400 text-xs">
-              Vellore Institute of Technology (VIT)<br />
-              School of Computer Science & Engineering<br />
-              B.Tech Capstone Project 2026
+              Zero-Knowledge Verification Architecture<br />
+              SHA-256 Chain of Custody<br />
+              Decentralized Identity & Asset Ledger
             </p>
             <div className="pt-1">
               <Link to="/blockchain" className="text-brand-400 hover:text-brand-300 underline text-xs">

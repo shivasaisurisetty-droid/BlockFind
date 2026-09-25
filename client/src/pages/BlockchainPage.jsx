@@ -117,7 +117,7 @@ export default function BlockchainPage() {
               </div>
             </div>
 
-            {/* Academic Notice Banner */}
+            {/* Network Consensus Banner */}
             <div className="px-3.5 py-2 rounded-2xl bg-slate-800/80 border border-slate-700 text-[11px] text-slate-300 flex items-center gap-2 font-mono">
               <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
               <span>SHA-256 Ledger • Proof-of-Authority Consensus</span>

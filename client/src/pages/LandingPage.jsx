@@ -33,7 +33,7 @@ export default function LandingPage() {
               <Sparkles className="w-3.5 h-3.5 text-brand-600" />
               <span>Next-Gen Cryptographic Asset Protection</span>
               <span className="w-1 h-1 rounded-full bg-brand-400"></span>
-              <span className="text-brand-600">B.Tech Prototype</span>
+              <span className="text-brand-600">Live Enterprise Edition</span>
             </div>
 
             {/* Main Headline */}

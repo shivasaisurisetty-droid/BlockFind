@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const prisma = require('../config/db');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'blockfind_academic_btech_secure_jwt_token_secret_key_2026_xyz';
+const JWT_SECRET = process.env.JWT_SECRET || 'blockfind_production_grade_jwt_token_secret_key_2026_secure';
 
 const authenticate = async (req, res, next) => {
   try {

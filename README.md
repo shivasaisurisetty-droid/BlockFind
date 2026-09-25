@@ -1,6 +1,6 @@
 # BlockFind – Lost and Found Asset Management System
 
-> **B.Tech Capstone Project Prototype**  
+> **Enterprise Cryptographic Asset Recovery & Provenance Platform**  
 > *A secure, transparent platform for managing lost and found assets with trusted ownership verification, tamper-evident blockchain provenance, and cloud-native architecture.*
 
 ---
@@ -9,7 +9,7 @@
 
 Traditional lost-and-found operations suffer from fraudulent claims, manual record tampering, lack of auditability, and poor cross-facility matching. **BlockFind** solves these challenges by combining:
 1. **Cryptographic Provenance**: Every registered asset and verified ownership transfer is timestamped and hashed onto an immutable blockchain ledger.
-2. **Role-Based Access Control (RBAC)**: Strict separation of duties between regular Students/Users, authorized Campus Security Verifiers, and Infrastructure Admins.
+2. **Role-Based Access Control (RBAC)**: Strict separation of duties between regular Users, authorized Security Verifiers, and System Administrators.
 3. **Smart Matching Engine**: Automated similarity matching comparing category, location, and hardware descriptors between lost alerts and found item deposits.
 4. **Zero-Knowledge Evidence Inspection**: Sensitive invoices and proof documents are verified by authorized verifiers without leaking personal data on-chain.
 5. **AWS Cloud-Native Readiness**: Multi-tier architecture designed for deployment on AWS EC2, Amazon RDS PostgreSQL, Amazon S3, and Elastic Load Balancers.
@@ -18,11 +18,11 @@ Traditional lost-and-found operations suffer from fraudulent claims, manual reco
 
 ## 👥 Demo Accounts (1-Click Login Available)
 
-The login screen includes quick 1-click demo login buttons for seamless presentations:
+The login screen includes quick 1-click demo login buttons for seamless testing and evaluation:
 
 | Role | Email | Password | Access Privileges |
 |---|---|---|---|
-| **Regular User (Student)** | `user@blockfind.demo` | `User@123` | Asset Registration, Report Lost, Submit Claims, Search |
+| **Regular User** | `user@blockfind.demo` | `User@123` | Asset Registration, Report Lost, Submit Claims, Search |
 | **Verifier (Security Cell)** | `verifier@blockfind.demo` | `Verifier@123` | Claim Review, Evidence Inspection, Ownership Approval |
 | **System Admin (Dean / CIO)** | `admin@blockfind.demo` | `Admin@123` | Analytics, User Privilege Management, Audit Logs |
 
@@ -63,7 +63,7 @@ cd server
 npx prisma db push
 node prisma/seed.js
 ```
-*This populates 10 realistic users, 15 registered assets, 8 lost reports, 6 found items, 6 claims, and complete blockchain transaction blocks.*
+*This populates realistic users, registered assets, lost reports, found items, claims, and complete blockchain transaction blocks.*
 
 ### 4. Running the Application
 From the root directory:
@@ -76,12 +76,12 @@ Or in separate terminals:
 
 ---
 
-## 📱 Recommended Presentation & Demo Sequence
+## 📱 System Tour & Feature Walkthrough
 
-For your academic presentation tomorrow, follow this step-by-step walkthrough:
+Follow this step-by-step walkthrough to explore the full BlockFind workflow:
 
 1. **Landing Page (`/`)**:
-   - Showcase the SaaS hero, the 4-stage workflow (Register $\to$ Report $\to$ Verify $\to$ Recover), and the live "Demo Blockchain Active" badge.
+   - Showcase the SaaS hero, the 4-stage workflow (Register $\to$ Report $\to$ Verify $\to$ Recover), and the live "Blockchain Active" telemetry.
 2. **1-Click Login as User (`/login`)**:
    - Click the **"User"** quick-login chip (`user@blockfind.demo`).
    - View the User Dashboard showing active registered assets and live blockchain telemetry.
@@ -160,5 +160,6 @@ For your academic presentation tomorrow, follow this step-by-step walkthrough:
 
 ---
 
-## 📜 License & Academic Citation
-Developed for B.Tech Capstone Project Presentation 2026. All rights reserved.
+## 📜 License
+MIT License © 2026 Shiva Sai. All rights reserved.
+

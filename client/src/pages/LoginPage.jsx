@@ -74,7 +74,7 @@ export default function LoginPage() {
               Demo Credentials (1-Click Login)
             </span>
             <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-brand-100 text-brand-700 rounded-md">
-              B.Tech Demo
+              Instant Access
             </span>
           </div>
 

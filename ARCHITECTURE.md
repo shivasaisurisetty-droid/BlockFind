@@ -117,7 +117,7 @@
 
 ---
 
-## 4. Academic Problem Solving Matrix
+## 4. Core Problem Solving & Value Matrix
 
 | Traditional Lost & Found Deficiency | BlockFind Solution | Technical Implementation |
 |---|---|---|
