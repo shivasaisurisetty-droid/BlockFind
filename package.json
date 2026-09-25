@@ -1,0 +1,17 @@
+{
+  "name": "blockfind-root",
+  "version": "1.0.0",
+  "description": "BlockFind – Lost and Found Asset Management System with Blockchain Verification and AWS-ready Architecture",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "seed": "npm --prefix server run seed",
+    "build": "npm --prefix client run build",
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install && npm --prefix blockchain install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

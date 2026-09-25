@@ -1,0 +1,15 @@
+{
+  "name": "blockfind-contracts",
+  "version": "1.0.0",
+  "description": "BlockFind Smart Contracts for Asset Registration, Claims, and Ownership Verification",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "deploy:local": "npx hardhat run scripts/deploy.js --network localhost",
+    "deploy:sepolia": "npx hardhat run scripts/deploy.js --network sepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.18"
+  }
+}

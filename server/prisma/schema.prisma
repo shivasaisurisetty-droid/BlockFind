@@ -1,0 +1,239 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id               String             @id @default(uuid())
+  name             String
+  email            String             @unique
+  passwordHash     String
+  role             String             @default("USER") // USER, VERIFIER, ADMIN
+  phone            String?
+  organization     String?            @default("Vellore Institute of Technology")
+  avatarUrl        String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  // Relationships
+  ownedAssets      Asset[]            @relation("CurrentOwner")
+  lostReports      LostReport[]       @relation("ReporterLost")
+  foundReports     FoundReport[]      @relation("ReporterFound")
+  submittedClaims  Claim[]            @relation("ClaimantUser")
+  verifiedClaims   Claim[]            @relation("VerifierUser")
+  auditLogs        AuditLog[]         @relation("UserAuditLogs")
+  notifications    Notification[]     @relation("UserNotifications")
+  previousTransfers OwnershipHistory[] @relation("PreviousOwner")
+  newTransfers     OwnershipHistory[] @relation("NewOwner")
+  
+  // Chat relationships
+  conversationsAsP1 Conversation[]    @relation("ConversationsAsP1")
+  conversationsAsP2 Conversation[]    @relation("ConversationsAsP2")
+}
+
+model Asset {
+  id               String             @id // Unique Asset ID e.g., BF-LAP-00128
+  name             String
+  category         String             // LAPTOP, PHONE, ELECTRONICS, DOCUMENTS, KEYS, BAG, OTHER
+  serialNumber     String?            // Unique serial / hardware tag
+  description      String
+  status           String             @default("REGISTERED") // REGISTERED, LOST, FOUND, CLAIM_PENDING, VERIFIED, RETURNED
+  currentOwnerId   String
+  currentOwner     User               @relation("CurrentOwner", fields: [currentOwnerId], references: [id])
+  primaryImageUrl  String?
+  blockchainTxHash String?
+  registeredAt     DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  // Relationships
+  lostReports      LostReport[]
+  claims           Claim[]
+  ownershipHistory OwnershipHistory[]
+  blockchainTxs    BlockchainTransaction[]
+  auditLogs        AuditLog[]
+}
+
+model LostReport {
+  id                String    @id // LR-2026-0001
+  assetId           String?
+  asset             Asset?    @relation(fields: [assetId], references: [id], onDelete: SetNull)
+  itemName          String
+  category          String
+  description       String
+  lastKnownLocation String
+  dateLost          String
+  approximateTime   String?
+  additionalInfo    String?
+  imageUrl          String?
+  reporterId        String
+  reporter          User      @relation("ReporterLost", fields: [reporterId], references: [id])
+  status            String    @default("ACTIVE") // ACTIVE, MATCHED, RESOLVED, CANCELLED
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  conversations     Conversation[]
+}
+
+model FoundReport {
+  id                String    @id // FR-2026-0001
+  itemName          String
+  category          String
+  description       String
+  foundLocation     String
+  dateFound         String
+  timeFound         String?
+  storageLocation   String?   @default("Campus Security Desk - Main Block")
+  imageUrl          String?
+  additionalDetails String?
+  reporterId        String
+  reporter          User      @relation("ReporterFound", fields: [reporterId], references: [id])
+  status            String    @default("AVAILABLE") // AVAILABLE, CLAIM_PENDING, RETURNED, RESOLVED, ARCHIVED
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  claims            Claim[]
+  conversations     Conversation[]
+}
+
+model Claim {
+  id                    String       @id // CLM-2026-0001
+  foundReportId         String
+  foundReport           FoundReport  @relation(fields: [foundReportId], references: [id], onDelete: Cascade)
+  assetId               String?
+  asset                 Asset?       @relation(fields: [assetId], references: [id], onDelete: SetNull)
+  claimantId            String
+  claimant              User         @relation("ClaimantUser", fields: [claimantId], references: [id])
+  claimReason           String
+  identificationDetails String
+  proofDocumentUrl      String?
+  additionalProof       String?
+  contactPhone          String
+  status                String       @default("PENDING_VERIFICATION") // PENDING_VERIFICATION, APPROVED, REJECTED
+  verifierId            String?
+  verifier              User?        @relation("VerifierUser", fields: [verifierId], references: [id])
+  verificationRemarks   String?
+  verifiedAt            DateTime?
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+}
+
+model OwnershipHistory {
+  id               String    @id @default(uuid())
+  assetId          String
+  asset            Asset     @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  previousOwnerId  String?
+  previousOwner    User?     @relation("PreviousOwner", fields: [previousOwnerId], references: [id])
+  newOwnerId       String
+  newOwner         User      @relation("NewOwner", fields: [newOwnerId], references: [id])
+  transferType     String    // INITIAL_REGISTRATION, CLAIM_VERIFIED_TRANSFER, CHAT_VERIFIED_RETURN
+  transferReason   String?
+  blockchainTxHash String?
+  timestamp        DateTime  @default(now())
+}
+
+model BlockchainTransaction {
+  id             String    @id @default(uuid())
+  txHash         String    @unique
+  blockNumber    Int
+  assetId        String?
+  asset          Asset?    @relation(fields: [assetId], references: [id], onDelete: SetNull)
+  actionType     String    // ASSET_REGISTERED, STATUS_UPDATED, OWNERSHIP_TRANSFERRED, CASE_VERIFIED_RESOLVED
+  fromAddress    String
+  toAddress      String
+  payloadHash    String
+  blockTimestamp DateTime  @default(now())
+  networkName    String    @default("Demo Blockchain Environment")
+  status         String    @default("CONFIRMED") // CONFIRMED, PENDING, FAILED
+  rawData        String?   // JSON representation of block payload
+}
+
+model AuditLog {
+  id               String    @id @default(uuid())
+  eventType        String    // USER_REGISTERED, ASSET_REGISTERED, ITEM_REPORTED_LOST, ITEM_REPORTED_FOUND, CLAIM_SUBMITTED, CLAIM_APPROVED, CLAIM_REJECTED, OWNERSHIP_TRANSFERRED, CONVERSATION_CREATED, MESSAGE_SENT, VERIFICATION_REQUESTED, OWNERSHIP_VERIFIED, RETURN_REQUESTED, OWNER_CONFIRMED_RETURN, CASE_RESOLVED, CASE_DISPUTED
+  userId           String?
+  user             User?     @relation("UserAuditLogs", fields: [userId], references: [id], onDelete: SetNull)
+  assetId          String?
+  asset            Asset?    @relation(fields: [assetId], references: [id], onDelete: SetNull)
+  details          String
+  ipAddress        String?   @default("127.0.0.1")
+  userAgent        String?   @default("Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+  blockchainTxHash String?
+  createdAt        DateTime  @default(now())
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String    @default("INFO") // INFO, SUCCESS, WARNING, ACTION_REQUIRED
+  isRead    Boolean   @default(false)
+  linkUrl   String?
+  createdAt DateTime  @default(now())
+}
+
+// ----------------------------------------------------
+// NEW PRIVACY-PRESERVING CHAT & IN-CHAT VERIFICATION MODELS
+// ----------------------------------------------------
+
+model Conversation {
+  id                   String                @id @default(uuid())
+  lostReportId         String?
+  lostReport           LostReport?           @relation(fields: [lostReportId], references: [id], onDelete: SetNull)
+  foundReportId        String?
+  foundReport          FoundReport?          @relation(fields: [foundReportId], references: [id], onDelete: SetNull)
+  participantOneId     String                // Initiator / Owner
+  participantOne       User                  @relation("ConversationsAsP1", fields: [participantOneId], references: [id])
+  participantTwoId     String                // Recipient / Finder
+  participantTwo       User                  @relation("ConversationsAsP2", fields: [participantTwoId], references: [id])
+  status               String                @default("ACTIVE") // ACTIVE, VERIFIED, RETURN_PENDING, RESOLVED, DISPUTED
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+
+  messages             Message[]
+  verificationRequests VerificationRequest[]
+  resolutions          CaseResolution[]
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String?      // Null for SYSTEM messages
+  messageType    String       @default("TEXT") // TEXT, IMAGE, SYSTEM
+  content        String
+  attachmentUrl  String?
+  isRead         Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+}
+
+model VerificationRequest {
+  id                  String       @id @default(uuid())
+  conversationId      String
+  conversation        Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  requestedBy         String       // User ID of Finder
+  status              String       @default("PENDING") // PENDING, VERIFIED, REJECTED
+  evidenceDescription String?
+  checklistItems      String?      // JSON string of requested proof categories
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+}
+
+model CaseResolution {
+  id               String       @id @default(uuid())
+  conversationId   String       @unique
+  conversation     Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  finderConfirmed  Boolean      @default(false)
+  ownerConfirmed   Boolean      @default(false)
+  status           String       @default("PENDING") // PENDING, RETURN_PENDING_OWNER_CONFIRMATION, RESOLVED, DISPUTED
+  disputeReason    String?
+  blockchainTxHash String?
+  resolvedAt       DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+}
